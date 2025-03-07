@@ -7,7 +7,10 @@ def create_array():
     print("3. 3D Array")
     choice = int(input("Enter your choice: "))
 
-    if choice == 2:
+    if choice == 1:
+        elements = list(map(int, input("Enter elements for 1D array: ").split()))
+        array = np.array(elements)
+    elif choice == 2:
         rows = int(input("Enter number of rows: "))
         cols = int(input("Enter number of columns: "))
         elements = list(map(int, input(f"Enter {rows * cols} elements: ").split()))
@@ -19,7 +22,7 @@ def create_array():
         elements = list(map(int, input(f"Enter {depth * rows * cols} elements: ").split()))
         array = np.array(elements).reshape(depth, rows, cols)
     else:
-        print("Only 2D array is implemented in this version.")
+        print("Invalid choice.")
         return None
 
     print("Array created successfully:")
@@ -28,9 +31,18 @@ def create_array():
 
 def slicing(array):
     try:
-        start_row, end_row = map(int, input("Enter row range (start end): ").split())
-        start_col, end_col = map(int, input("Enter column range (start end): ").split())
-        sliced_array = array[start_row:end_row, start_col:end_col]
+        if array.ndim == 1:
+            start, end = map(int, input("Enter range (start end): ").split())
+            sliced_array = array[start:end]
+        elif array.ndim == 2:
+            start_row, end_row = map(int, input("Enter row range (start end): ").split())
+            start_col, end_col = map(int, input("Enter column range (start end): ").split())
+            sliced_array = array[start_row:end_row, start_col:end_col]
+        elif array.ndim == 3:
+            start_depth, end_depth = map(int, input("Enter depth range (start end): ").split())
+            start_row, end_row = map(int, input("Enter row range (start end): ").split())
+            start_col, end_col = map(int, input("Enter column range (start end): ").split())
+            sliced_array = array[start_depth:end_depth, start_row:end_row, start_col:end_col]
         print("Sliced Array:")
         print(sliced_array)
     except:
@@ -65,7 +77,10 @@ def mathematical_operations(array):
 def combine_arrays(array):
     elements = list(map(int, input(f"Enter {array.size} elements for another array: ").split()))
     second_array = np.array(elements).reshape(array.shape)
-    combined_array = np.vstack((array, second_array))
+    if array.ndim == 1:
+        combined_array = np.hstack((array, second_array))
+    else:
+        combined_array = np.vstack((array, second_array))
     print("Combined Array:")
     print(combined_array)
 
@@ -81,7 +96,7 @@ def search_sort_filter(array):
         result = np.where(array == value)
         print(f"Value found at indices: {result}")
     elif choice == 2:
-        sorted_array = np.sort(array, axis=1)
+        sorted_array = np.sort(array, axis=None)
         print("Sorted Array:")
         print(sorted_array)
     elif choice == 3:
@@ -149,4 +164,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
